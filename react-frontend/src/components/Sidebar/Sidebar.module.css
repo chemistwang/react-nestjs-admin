@@ -1,0 +1,21 @@
+.sidebar {
+    width: 5rem;
+    background: #36495c;
+}
+.github {
+   height: 3.75rem;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.item {
+    height: 5rem;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.text {
+    font-size: .75rem;
+}
