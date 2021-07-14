@@ -1,5 +1,5 @@
-import { Component } from "react";
-import { Form, Input, Button, Checkbox, Table } from "antd";
+import { Component, useState } from "react";
+import { Form, Input, Button, Checkbox, Table, Modal } from "antd";
 
 import styles from './Index.module.css'
 
@@ -16,57 +16,80 @@ const columns = [
         render: ()=> (
             <>
                 <a>编辑</a>
-                <a>删除</a>
+                <a className={styles['delete']}>删除</a>
             </>
         )},
 ];
 
-const dataSource = [
-    { key: '1', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '2', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '3', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '4', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '5', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '6', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '7', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '8', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '9', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '10', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '11', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '12', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '13', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-    { key: '14', name: '高陵公安分局', creator: 'admin', time: '2021-06-10  11:34'},
-];
+const dataSource = function(){
+    const count = 100;
+    let list = [];
+    
+    for(let i=0;i<=count;i++) {
+        list.push({
+            key: i,
+            name: `高陵公安分局-${i}`,
+            creator: 'admin',
+            time: '2021-06-10  11:34'
+        })
+    }
+
+    return list;
+}
+
+
+const Index = () => {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const showModal = function(){ setIsModalVisible(true);}
+    const handleOk = function(){ setIsModalVisible(false);}
+    const handleCancel = function(){ setIsModalVisible(false);}
 
 
 
-export default class Index extends Component{
-
-    render(){
-
-        return (
+    return (
+        <>
+            <Modal title="添加" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                <Form
+                >
+                    <Form.Item
+                        label="单位名称"
+                        name="station"
+                        rules={[{ required: true, message: '请输入单位名称' }]}
+                    >
+                        <Input className={styles['modal-input']} />
+                    </Form.Item>
+                </Form>
+                
+            </Modal>
             <div className={styles['container']}>
                 <Sidebar></Sidebar>
                 <div className={styles['right-box']}>
-                    <div className={styles['header'] + ' clearfix'}>
-                        <div className={styles['title'] + ' fl'}>智慧公安综合管理平台</div>
-                        <div className='fr'>管理员</div>
+                    <div className={styles['header']}>
+                        <div className={styles['title']}>智慧公安综合管理平台</div>
+                        <div>管理员</div>
                     </div>
                     <div className={styles['content']}>
                         <div className={styles['box']}>
                             <div className={styles['top']}>
-                                <Input className={styles['input']} placeholder="请输入单位名称" />
-                                <Button className={styles['btn']} type="primary">搜索</Button>
+                                <div>
+                                    <Input className={styles['input']} placeholder="请输入单位名称" />
+                                    <Button className={styles['search-btn']} type="primary">搜索</Button>
+                                </div>
+                                <Button className={styles['add-btn']} type="primary" onClick={showModal}>添加单位</Button>
                             </div>
                             <div className={styles['bottom']}>
-                                <Table dataSource={dataSource} columns={columns} />
+                                <Table dataSource={dataSource()} columns={columns} />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-           
-        )
-    }
+        </>
+    )
+    
 
 }
+
+
+export default Index;
