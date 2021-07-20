@@ -15,57 +15,19 @@ import App from "../App";
 
 
 const routes = [
-    {
-        path: '/',
-        component: App
-    },
-    {
-        path: '/login',
-        component: Index
-    },
-    {
-        path: '/index',
-        component: Login
-    },
-    {
-        path: '/station ',
-        component: Station
-    },
-    {
-        path: '/police',
-        component: Police
-    },
-    {
-        path: '/duty',
-        component: Duty
-    },
-    {
-        path: '/activity',
-        component: Activity
-    },
-    {
-        path: '/account',
-        component: Account
-    },
-    {
-        path: '/role',
-        component: Role
-    },
-    {
-        path: '/log',
-        component: Log
-    },
-    {
-        path: '/setting',
-        component: Setting
-    },
-    {
-        path: '/notfound',
-        component: NotFound
-    },
-
+    { path: '/', component: App},
+    { path: '/index',component: Index },
+    { path: '/login', component: Login },
+    { path: '/station ', component: Station },
+    { path: '/police', component: Police },
+    { path: '/duty', component: Duty },
+    { path: '/activity', component: Activity },
+    { path: '/account', component: Account },
+    { path: '/role', component: Role },
+    { path: '/log', component: Log },
+    { path: '/setting', component: Setting },
+    { path: '/notfound', component: NotFound },
 ]
-
 
 export default routes;
 

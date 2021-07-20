@@ -8,11 +8,8 @@ import './App.css';
 import { Button } from 'antd';
 
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import routes from './router';
 
 import Login from './components/Login/Login';
-import Station from './components/Station/Station';
-import Police from './components/Police/Police';
 import Index from './components/Index/Index';
 
 
@@ -29,30 +26,18 @@ function App() {
         >
           Learn React
         </a>
+        <Button type="primary" size="large">Enter App</Button>
       </header> */}
-
       <Router>
-          {/* <Link to="/login"><Button type="primary" size="large">Enter Login</Button></Link>
-          <Link to="/station"><Button type="primary" size="large">Enter Station</Button></Link>  
-          <Link to="/police"><Button type="primary" size="large">Enter Police</Button></Link>   */}
-
-          <Switch>
-            <Route path="/login">
-              <Login></Login>
-            </Route>
-            <Route path="/index">
-              <Index></Index>
-            </Route>
-            {/* <Route path="/station">
-              <Station></Station>
-            </Route>
-            <Route path="/police">
-              <Police></Police>
-            </Route> */}
-          </Switch>
-        </Router>
-
-
+        <Switch>
+          <Route path="/login">
+            <Login></Login>
+          </Route>
+          <Route path="/index">
+            <Index></Index>
+          </Route>
+        </Switch>
+      </Router>
     </div>
     
   );

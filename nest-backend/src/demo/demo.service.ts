@@ -12,12 +12,11 @@ export class DemoService {
     private readonly communityRepository: typeof Community,
   ) {}
 
-  async findAllOperation(): Promise<OperationLog[]> {
-    const data = await this.operationLogRepository.findAll<OperationLog>();
-    return data;
+  findAllOperation(): Promise<OperationLog[]> {
+    return this.operationLogRepository.findAll<OperationLog>();
   }
 
-  async findAllCommunity(): Promise<Community[]> {
-    return await this.communityRepository.findAll<Community>();
+  findAllCommunity(): Promise<Community[]> {
+    return this.communityRepository.findAll<Community>();
   }
 }
