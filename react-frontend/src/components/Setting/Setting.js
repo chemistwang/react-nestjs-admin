@@ -21,7 +21,7 @@ const Duty = () => {
                 <div className={styles["left"]}>
                     <ul className={styles["list"]}>
                         <li>
-                            <Link to="/index/setting/department">部门机构</Link>
+                            <Link to="/index/setting/department">组织机构</Link>
                         </li>
                         <li>
                             <Link to="/index/setting/log">系统日志</Link>

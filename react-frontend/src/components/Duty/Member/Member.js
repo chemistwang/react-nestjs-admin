@@ -68,7 +68,7 @@ const Member = () => {
             </div>
             <div className={styles['bottom']}>
                 <Table dataSource={dataSource()} columns={columns} />
-            </div>
+            </div> 
         </div>
     )
 
