@@ -14,8 +14,15 @@ const API = {};
 // 获取部门
 API.getDepartment = async (param) => {
     let {status, statusText, data} = await instance.get('/setting/department', param);
-    return {status, statusText, data: data}
+    return {status, statusText, data}
 }
+
+// 获取部门人数
+API.getDepartmentMemberCount = async(param) => {
+    let {status, statusText, data} = await instance.get('/setting/departmentMember', param);
+    return {status, statusText, data}
+}
+
 // 新增部门
 API.createDepartment = async(param) => {
     let {status, statusText, data} = await instance.post('/setting/department', param);
@@ -23,12 +30,12 @@ API.createDepartment = async(param) => {
 }
 // 删除部门
 API.deleteDepartment = async(param) => {
-    let {status, statusText, data} = await instance.post('/setting/department', param);
+    let {status, statusText, data} = await instance.delete('/setting/department', param);
     return {status, statusText, data: data}
 }
 // 更新部门
 API.updateDepartment = async(param) => {
-    let {status, statusText, data} = await instance.post('/setting/department', param);
+    let {status, statusText, data} = await instance.put('/setting/department', param);
     return {status, statusText, data: data}
 }
 

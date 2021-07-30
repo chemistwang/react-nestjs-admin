@@ -1,14 +1,12 @@
 import React from "react";
-
 import { Form, Input, Button, Table, Modal, message } from "antd";
-
-
-
 import styles from './Department.module.css'
-
 import API from '../../../apis/index.js'
-
 class Department extends React.Component{
+    
+    constructor(props) {
+        super(props);
+    }
 
     columns = [
         { title: '组织名称', dataIndex: 'name', key: 'name'},
@@ -16,10 +14,10 @@ class Department extends React.Component{
             title: '操作', 
             dataIndex: 'op', 
             key: 'op', 
-            render: ()=> (
+            render: (_, record)=> (
                 <>
                     <a onClick={this.showModalEdit}>编辑</a>
-                    <a className={styles['delete']} onClick={this.deleteDepartment}>删除</a>
+                    <a className={styles['delete']} onClick={() => this.deleteDepartment(record.id)}>删除</a>
                 </>
             )},
     ];
@@ -50,6 +48,7 @@ class Department extends React.Component{
         console.log(page, pageSize)
     }
 
+    // 初始化数据
     initDataSource = async () => { 
         let {data} = await API.getDepartment();
         // this.paginationProps.total = data.data.count
@@ -59,49 +58,76 @@ class Department extends React.Component{
         })
     }
 
-    
+    // 新增部门
     addDepartment = async(name) => {
-        let data = await API.createDepartment({name: name});
-        if (data.data.success) {
-            message.success(data.data.msg);
+        let {data} = await API.createDepartment({name: name});
+        if (data.success) {
+            message.success(data.msg);
             this.initDataSource();
         } else {
-            message.error(data.data.msg)
+            message.error(data.msg)
         }
-        this.setState({
-            modalInputValue: ''
-        })
     }
 
+    // 删除部门
     deleteDepartment = async(id) => {
-
+        let {data} = await API.getDepartmentMemberCount({
+            params: {
+                id: id
+            }
+        });
+        if (data.data > 0) {
+            message.error('该组织下有所属人员，不可删除!')
+        } else {
+            let {data: delData} = await API.deleteDepartment({
+                params: {
+                    id: id
+                }   
+            });
+            if (delData.success) {
+                message.success(delData.msg);
+                this.initDataSource();
+            } else {
+                message.error(delData.msg);
+            }
+        }
     }
 
+  
+    // 弹出框确定按钮
     handleOk = () => {
         this.setState({
             isModalVisible: false
         });
         this.addDepartment(this.state.modalInputValue);
-    }
-    handleCancel = () => {
         this.setState({
-            isModalVisible: false
+            modalInputValue: ''
         })
     }
+    // 弹出框取消按钮
+    handleCancel = () => {
+        this.setState({
+            isModalVisible: false,
+            modalInputValue: ''
+        })
+    }
+    // 添加
     showModalAdd = () => {
         this.setState({
             modalTitle: '添加',
             isModalVisible: true
         })
     }
+    // 编辑
     showModalEdit = () => {
         this.setState({
             modalTitle: '编辑',
             isModalVisible: true
         })
     }
-
+    // 输入框回调
     modalInputChange = (e) => {
+        console.log(e.target.value, 'e.target.value--')
         this.setState({
             modalInputValue: e.target.value
         })
@@ -120,6 +146,12 @@ class Department extends React.Component{
         return (
             <div>
                 <Modal title={this.state.modalTitle} visible={this.state.isModalVisible} onOk={this.handleOk} onCancel={this.handleCancel}>
+                    
+                    <Input 
+                               
+                        value={this.state.modalInputValue}  
+                        onChange={this.modalInputChange}/>
+
                     <Form
                     >
                         <Form.Item
@@ -127,7 +159,11 @@ class Department extends React.Component{
                             name="station"
                             rules={[{ required: true, message: '请输入组织名称' }]}
                         >
-                            <Input className={styles['modal-input']} maxLength="20" value={this.state.modalInputValue} onChange={this.modalInputChange}/>
+                            <Input 
+                                className={styles['modal-input']} 
+                                maxLength="20" 
+                                value={this.state.modalInputValue}  
+                                onChange={this.modalInputChange}/>
                         </Form.Item>
                     </Form>  
                 </Modal>
