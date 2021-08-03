@@ -1,6 +1,6 @@
 import { Component } from "react";
-import { Button, Select, Input, Upload, Table, message } from 'antd';
-
+import { Button, Select, Input, Upload, Table, Modal, Form, message } from 'antd';
+import { InfoCircleFilled } from '@ant-design/icons';
 
 import styles from './Police.module.css'
 
@@ -12,7 +12,7 @@ export default class Police extends Component{
     // constructor(){
 
     // }
-
+    // 表格列数据
     columns = [
         { title: '警员姓名', dataIndex: 'name', key: 'name', width: '7.5rem'},
         { title: '警员编号', dataIndex: 'number', key: 'number', width: '7rem'},
@@ -32,11 +32,12 @@ export default class Police extends Component{
                 <>
                     <a onClick={() => this.showModalView(record.id)}>查看</a>
                     <a className={styles['edit']} onClick={() => this.showModalEdit(record.id)}>编辑</a>
-                    <a className={styles['delete']} onClick={() => this.deletePolice(record.id)}>删除</a>
+                    <a className={styles['delete']} onClick={() => this.showModalDelete(record.id)}>删除</a>
                 </>
             )},
     ];
 
+    // 分页器数据
     paginationProps = {
 
     }
@@ -59,7 +60,14 @@ export default class Police extends Component{
         // 部门下拉框数据
         depSelectSource: [{'label': '全部部门', 'value': 'all'}],
         // 表格数据
+        id: '',
         dataSource: [],
+        // 查看弹窗
+        isViewModalVisible: false,
+        // 编辑弹窗
+        isEditModalVisible: false,
+        // 删除弹窗
+        isDeleteModalVisible: false
     }
 
     importHandlerChange = (info) => {
@@ -97,17 +105,57 @@ export default class Police extends Component{
         console.log(gender, 'gender...')
     }
 
+    // 弹出框
     showModalView = () => {
-
+        this.setState({
+            isViewModalVisible: true
+        })
     }
 
     showModalEdit = () => {
 
     }
 
-    deletePolice = () => {
-
+    showModalDelete = (policeId) => {
+        this.setState({
+            isDeleteModalVisible: true,
+            id: policeId
+        })
     }
+
+    deleteHandleOk = async () => {
+        this.setState({
+            isDeleteModalVisible: false
+        })
+        let {data} = await API.deletePolice({
+            params: {
+                id: this.state.id
+            } 
+        });
+        if (data.success) {
+            message.success(data.msg);
+            this.initDataSource();
+        } else {
+            message.error(data.msg)
+        }
+    }
+
+    viewHandleCancel = () => {
+        this.setState({
+            isViewModalVisible: false
+        })
+    }
+    editHandleCancel = () => {
+        this.setState({
+            isEditModalVisible: false
+        })
+    }
+    deleteHandleCancel = () => {
+        this.setState({
+            isDeleteModalVisible: false
+        })
+    }
+    
 
     // 初始化部门下拉框数据
     initDepOption = async () => {
@@ -126,7 +174,7 @@ export default class Police extends Component{
     initDataSource = async () => {
         let {data} = await API.getPolice();
         this.setState({
-            dataSource: data.data.rows
+            dataSource: data.data.list
         })
     }
 
@@ -145,6 +193,43 @@ export default class Police extends Component{
         return (
             <div className={styles['container']}>
                 <div className={styles['box']}>
+                    <Modal
+                    title="查看" 
+                    visible={this.state.isViewModalVisible}
+                    footer={null}
+                    onCancel={this.viewHandleCancel}
+                    >   
+                    <Form
+                        name="view"
+                        labelCol={{ span: 4 }}
+                        >
+                        <Form.Item label="姓名" name="name"><Input disabled/></Form.Item>
+                        <Form.Item label="警员编号" name="number"><Input disabled/></Form.Item>
+                        <Form.Item label="性别" name="gender"><Input disabled/></Form.Item>
+                        <Form.Item label="所属单位" name="department"><Input disabled/></Form.Item>
+                        <Form.Item label="职务" name="job"><Input disabled/></Form.Item>
+                        <Form.Item label="警衔" name="rank"><Input disabled/></Form.Item>
+                        <Form.Item label="出生日期" name="birth"><Input disabled/></Form.Item>
+                        <Form.Item label="籍贯" name="native"><Input disabled/></Form.Item>
+                        <Form.Item label="政治面貌" name="politics"><Input disabled/></Form.Item>
+                        <Form.Item label="学历" name="edu"><Input disabled/></Form.Item>
+                        <Form.Item label="毕业院校" name="school"><Input disabled/></Form.Item>
+                        <Form.Item label="联系方式" name="phone"><Input disabled/></Form.Item>
+                        </Form>
+                    </Modal>
+
+
+
+                    <Modal 
+                    title="删除" 
+                    visible={this.state.isDeleteModalVisible} 
+                    okText="删除"
+                    okButtonProps={{danger: true}}
+                    onOk={this.deleteHandleOk} 
+                    onCancel={this.deleteHandleCancel}>
+                        <p><InfoCircleFilled className={styles['danger']}/> 此操作将永久删除信息，是否继续删除？</p>
+                        <p className={styles['gray']}>确定删除后，数据永久删除且无法恢复</p>
+                    </Modal>
                     <div className={styles['filter']}>
                         <div className={styles['left']}>
                             <Select 

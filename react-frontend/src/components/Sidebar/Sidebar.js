@@ -6,7 +6,7 @@ import styles from './Sidebar.module.css'
 
 import { createFromIconfontCN } from '@ant-design/icons';
 
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 
 const sidebarInfo = [

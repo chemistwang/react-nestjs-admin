@@ -3,6 +3,7 @@ import logo from './logo.svg';
 
 import './styles/reset.css'
 import './styles/index.css'
+import './styles/color.css'
 import './App.css';
 
 import { Button } from 'antd';

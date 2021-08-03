@@ -1,16 +1,3 @@
-.container {
-    height: 100%;
-    background: #F1F2F6;
-    padding: .625rem;
-}
-
-.box {
-    background: #fff;
-    width: 100%;
-    height: 100%;
-    padding: 1.875rem 1.25rem;
-}
-
 .filter {
     display: flex;
     justify-content: space-between;
@@ -32,6 +19,14 @@
 .danger {
     color: #FF5345;
 }
+.orange {
+    color: orange
+}
+
 .gray {
     color: #9CA6B6C6;
-}
+} 
+
+
+
+

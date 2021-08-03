@@ -5,7 +5,10 @@ export default class Personal extends Component {
 
     render(){
         return (
-            <div>Personal</div>
+            <div>
+                <div>修改个人资料</div>
+                
+            </div>
         )
     }
 
