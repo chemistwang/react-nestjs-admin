@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import { Form, Input, Button, Table, Modal, message } from "antd";
 import styles from './Department.module.css'
 import API from '../../../apis/index.js'
@@ -8,6 +8,8 @@ class Department extends React.Component{
         super(props);
     }
 
+    formRef = React.createRef();
+
     columns = [
         { title: '组织名称', dataIndex: 'name', key: 'name'},
         { 
@@ -16,7 +18,7 @@ class Department extends React.Component{
             key: 'op', 
             render: (_, record)=> (
                 <>
-                    <a onClick={this.showModalEdit}>编辑</a>
+                    <a onClick={() => this.showModalEdit(record.id, record.name)}>编辑</a>
                     <a className={styles['delete']} onClick={() => this.deleteDepartment(record.id)}>删除</a>
                 </>
             )},
@@ -26,11 +28,9 @@ class Department extends React.Component{
         // 弹出框数据
         isModalVisible: false,
         modalTitle: '',
-        modalInputValue: '',
         // 表格数据
         dataSource: [],
         dataTotal: 0,
-        id: ''
     }
 
     // 分页器属性
@@ -93,23 +93,30 @@ class Department extends React.Component{
         }
     }
 
-  
-    // 弹出框确定按钮
-    handleOk = () => {
+    // 表单成功回调
+    onFinish = (values) => {
+        console.log('Success:', values);
+        let { department } = values;
         this.setState({
             isModalVisible: false
         });
-        this.addDepartment(this.state.modalInputValue);
-        this.setState({
-            modalInputValue: ''
-        })
+        this.resetForm();
+        this.addDepartment(department);
+    }
+    // 表单失败回调
+    onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
     }
     // 弹出框取消按钮
     handleCancel = () => {
         this.setState({
             isModalVisible: false,
-            modalInputValue: ''
         })
+        this.resetForm();
+    }
+    // 清除表单
+    resetForm = () => {
+        this.formRef.current.resetFields();
     }
     // 添加
     showModalAdd = () => {
@@ -117,22 +124,23 @@ class Department extends React.Component{
             modalTitle: '添加',
             isModalVisible: true
         })
+        console.log(1)
     }
     // 编辑
-    showModalEdit = () => {
+    showModalEdit = (id, value) => {
         this.setState({
             modalTitle: '编辑',
             isModalVisible: true
         })
-    }
-    // 输入框回调
-    modalInputChange = (e) => {
-        console.log(e.target.value, 'e.target.value--')
-        this.setState({
-            modalInputValue: e.target.value
-        })
-    }
+        
 
+
+        setTimeout(() => {
+            this.formRef.current.setFieldsValue({
+                department: value
+            })
+          }, 100);
+    }
 
     componentDidMount(){
         this.initDataSource();
@@ -145,28 +153,39 @@ class Department extends React.Component{
     render(){
         return (
             <div>
-                <Modal title={this.state.modalTitle} visible={this.state.isModalVisible} onOk={this.handleOk} onCancel={this.handleCancel}>
-                    
-                    <Input 
-                               
-                        value={this.state.modalInputValue}  
-                        onChange={this.modalInputChange}/>
-
+                {/* <Modal 
+                    title={this.state.modalTitle} 
+                    visible={this.state.isModalVisible} 
+                    onCancel={this.handleCancel}
+                    footer={null}
+                    >
                     <Form
+                        ref={this.formRef}
+                        name="depForm"
+                        onFinish={this.onFinish}
+                        onFinishFailed={this.onFinishFailed}
                     >
                         <Form.Item
                             label="组织名称"
-                            name="station"
+                            name="department"
                             rules={[{ required: true, message: '请输入组织名称' }]}
                         >
                             <Input 
                                 className={styles['modal-input']} 
                                 maxLength="20" 
-                                value={this.state.modalInputValue}  
-                                onChange={this.modalInputChange}/>
+                                />
                         </Form.Item>
+                        <div className={styles['modal-btn']}>
+                            <Form.Item>
+                                <Button onClick={this.handleCancel}>取消</Button>
+                            </Form.Item>
+                            <Form.Item className={styles['modal-btn-submit']}>
+                                <Button type="primary" htmlType="submit">保存</Button>
+                            </Form.Item>    
+                        </div>
                     </Form>  
-                </Modal>
+                </Modal> */}
+                <DepartmentModal title={this.state.modalTitle} visible={this.state.isModalVisible}></DepartmentModal>
                 <div className={styles['top']}>
                     <div>
                         <Input className={styles['input']} placeholder="请输入组织名称" />
@@ -180,12 +199,88 @@ class Department extends React.Component{
             </div>
         )
     }
-        
-        
-    
-
 }
 
+
+// 组织机构弹出框
+class DepartmentModal extends Component {
+    
+    constructor(props){
+        super(props);
+        console.log(props, 'xxxx')
+        this.state.modalTitle = props.title;
+        this.state.isModalVisible = props.visible;
+    }
+
+    formRef = React.createRef();
+
+    state = {
+        isModalVisible: false,
+        modalTitle: '',
+    }
+
+    handleCancel = () => {
+        this.setState({
+            isModalVisible: false,
+        })
+        this.resetForm();
+    }
+
+    onFinish = (values) => {
+        console.log('Success:', values);
+        let { department } = values;
+        this.setState({
+            isModalVisible: false
+        });
+        this.resetForm();
+    }
+
+    onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    }
+
+    // 清除表单
+    resetForm = () => {
+        this.formRef.current.resetFields();
+    }
+
+    render() {
+        return (
+             <Modal 
+                title={this.state.modalTitle} 
+                visible={this.state.isModalVisible} 
+                onCancel={this.handleCancel}
+                footer={null}
+                >
+                <Form
+                    ref={this.formRef}
+                    name="depForm"
+                    onFinish={this.onFinish}
+                    onFinishFailed={this.onFinishFailed}
+                >
+                    <Form.Item
+                        label="组织名称"
+                        name="department"
+                        rules={[{ required: true, message: '请输入组织名称' }]}
+                    >
+                        <Input 
+                            className={styles['modal-input']} 
+                            maxLength="20" 
+                            />
+                    </Form.Item>
+                    <div className={styles['modal-btn']}>
+                        <Form.Item>
+                            <Button onClick={this.handleCancel}>取消</Button>
+                        </Form.Item>
+                        <Form.Item className={styles['modal-btn-submit']}>
+                            <Button type="primary" htmlType="submit">保存</Button>
+                        </Form.Item>    
+                    </div>
+                </Form>  
+            </Modal>
+        )
+    }
+}
 
 
 export default Department;

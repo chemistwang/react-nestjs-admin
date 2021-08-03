@@ -8,7 +8,9 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import Department from './Department/Department'
 import Log from './Log/Log'
 import ModPwd from './ModPwd/ModPwd'
-
+import Account from "./Account/Account";
+import Role from './Role/Role';
+import Personal from "./Personal/Personal";
 
 const Duty = () => {
 
@@ -24,7 +26,16 @@ const Duty = () => {
                             <Link to="/index/setting/department">组织机构</Link>
                         </li>
                         <li>
+                            <Link to="/index/setting/account">账号管理</Link>
+                        </li>
+                        <li>
+                            <Link to="/index/setting/role">角色管理</Link>
+                        </li>
+                        <li>
                             <Link to="/index/setting/log">系统日志</Link>
+                        </li>
+                        <li>
+                            <Link to="/index/setting/personal">个人中心</Link>
                         </li>
                         <li>
                             <Link to="/index/setting/modpwd">修改密码</Link>
@@ -38,8 +49,17 @@ const Duty = () => {
                         <Route path="/index/setting/department">
                             <Department></Department>
                         </Route>
+                        <Route path="/index/setting/account">
+                            <Account></Account>
+                        </Route>
+                        <Route path="/index/setting/role">
+                            <Role></Role>
+                        </Route>
                         <Route path="/index/setting/log">
                             <Log></Log>
+                        </Route>
+                        <Route path="/index/setting/personal">
+                            <Personal></Personal>
                         </Route>
                         <Route path="/index/setting/modpwd">
                             <ModPwd></ModPwd>

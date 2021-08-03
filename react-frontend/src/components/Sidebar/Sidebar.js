@@ -11,9 +11,8 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 
 const sidebarInfo = [
     {icon: 'icon-homepage', text: '首页', path: '/index'},
-    // {icon: 'icon-jiagou', text: '组织架构', path: ''},
     // {icon: 'icon-jiagou', text: '值班备勤', path: ''},
-    // {icon: 'icon-police', text: '警员管理', path: ''},
+    {icon: 'icon-police', text: '警员管理', path: '/index/police'},
     // {icon: 'icon-jilu', text: '警情记录', path: ''},
     {icon: 'icon-rili', text: '值班管理', path: '/index/duty'},
     // {icon: 'icon-flag-fill', text: '大型活动', path: ''},
