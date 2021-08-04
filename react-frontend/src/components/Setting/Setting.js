@@ -12,34 +12,45 @@ import Account from "./Account/Account";
 import Role from './Role/Role';
 import Personal from "./Personal/Personal";
 
-const Duty = () => {
+class Setting extends Component {
 
     // constructor(){}
 
+    // 菜单列表
+    urlPrefix = '/index/setting'
+
+    menuList = [
+        {'path': `${this.urlPrefix}/department`, 'name': '组织机构'},
+        {'path': `${this.urlPrefix}/account`, 'name': '账号管理'},
+        {'path': `${this.urlPrefix}/role`, 'name': '角色管理'},
+        {'path': `${this.urlPrefix}/log`, 'name': '系统日志'},
+        {'path': `${this.urlPrefix}/personal`, 'name': '个人中心'},
+        {'path': `${this.urlPrefix}/modpwd`, 'name': '修改密码'},
+    ]
+
+    state = {
+        currentMenuIndex: -1
+    }
+
+    clickHandle = (index) => {
+        this.setState({
+            currentMenuIndex: index
+        })
+    }
+
+    render() {
         return (
-            <>
-           
+            <> 
             <div className={styles["container"]}>
                 <div className={styles["left"]}>
                     <ul className={styles["list"]}>
-                        <li>
-                            <Link to="/index/setting/department">组织机构</Link>
-                        </li>
-                        <li>
-                            <Link to="/index/setting/account">账号管理</Link>
-                        </li>
-                        <li>
-                            <Link to="/index/setting/role">角色管理</Link>
-                        </li>
-                        <li>
-                            <Link to="/index/setting/log">系统日志</Link>
-                        </li>
-                        <li>
-                            <Link to="/index/setting/personal">个人中心</Link>
-                        </li>
-                        <li>
-                            <Link to="/index/setting/modpwd">修改密码</Link>
-                        </li>
+                        {this.menuList.map((item, index) => {
+                            return (
+                                <li key={index} className={this.state.currentMenuIndex === index ? styles["active"]: ''} onClick={() => this.clickHandle(index)}>
+                                     <Link to={item.path}>{item.name}</Link>
+                                </li>
+                            )
+                        })}
                     </ul>
                 </div>
                 
@@ -70,8 +81,7 @@ const Duty = () => {
             </div>
             </>
         )
-    
-
+    }
 }
 
-export default Duty;
+export default Setting;

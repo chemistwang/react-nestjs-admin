@@ -13,6 +13,9 @@
     font-size: .875rem;
 }
 
+.list li.active {
+    background: aliceblue;
+}
 
 .right {
     flex: 1;

@@ -61,6 +61,28 @@ API.updatePolice = async(param) => {
 }
 
 
+/****************************************************************** 角色 ******************************************************************/
+
+// 获取权限列表
+API.getApi = async(param) => {
+    let {status, statusText, data} = await instance.get('/auth/role/api', param);
+    return {status, statusText, data: data}
+}
+
+// 获取角色
+API.getRole = async(param) => {
+    let {status, statusText, data} = await instance.get('/auth/role', param);
+    return {status, statusText, data: data}
+}
+
+// 创建角色
+API.createRole = async(param) => {
+    let {status, statusText, data} = await instance.post('/auth/role', param);
+    return {status, statusText, data: data}
+}
+
+
+
 
 export default API;
 

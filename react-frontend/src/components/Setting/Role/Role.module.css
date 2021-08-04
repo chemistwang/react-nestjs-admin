@@ -1,0 +1,40 @@
+.top {
+    display: flex;
+    margin-bottom: 1.25rem;
+    justify-content: space-between;
+}
+
+.input {
+    width: 16.25rem;
+    height: 2rem;
+}
+.search-btn {
+    width: 5.5rem;
+    height: 2rem;
+    background: #4A68E5;
+    margin-left: .625rem;
+}
+.add-btn {
+    background: #4A68E5;
+}
+
+.delete {
+    color: #FF5345;
+    margin-left: 2.5rem;
+}
+
+
+.modal-btn {
+    display: flex;
+    justify-content: flex-end;
+}
+.modal-btn-submit {
+    margin-left: .625rem;
+}
+
+.tree-box {
+    border: 1px solid red;
+    height: 31.25rem;
+    overflow: scroll;
+}
+
