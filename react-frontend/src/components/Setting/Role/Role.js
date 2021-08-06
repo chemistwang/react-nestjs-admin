@@ -18,7 +18,7 @@ export default class Role extends Component{
             key: 'op', 
             render: (_, record)=> (
                 <>
-                    <a onClick={() => this.showModalEdit(record.id, record.name)}>编辑</a>
+                    <a onClick={() => this.showModalEdit(record)}>编辑</a>
                     <a className={styles['delete']} onClick={() => this.deleteDepartment(record.id)}>删除</a>
                 </>
             )},
@@ -35,7 +35,8 @@ export default class Role extends Component{
         isModalVisible: false,
         // 数据源
         dataSource: [],
-        apiTreeData: []
+        apiTreeData: [],
+        apiTreeCheckedKeys: []
     }
 
     
@@ -44,16 +45,14 @@ export default class Role extends Component{
             isModalVisible: true,
             modalTitle: '创建'
         })
-        let {data} = await API.getApi();
-        this.setState({
-            apiTreeData: data.data
-        })
     }
 
-    showModalEdit = () => {
+    showModalEdit = (record) => {
+        console.log(record, 'xxxx')
         this.setState({
             isModalVisible: true,
-            modalTitle: '编辑'
+            modalTitle: '编辑',
+            apiTreeCheckedKeys: record.apiIdList
         })
     }
 
@@ -87,6 +86,10 @@ export default class Role extends Component{
         this.setState({
             dataSource: data.data.list
         })
+        let {data: apiTreeData} = await API.getApi();
+        this.setState({
+            apiTreeData: apiTreeData.data
+        })
     }
 
 
@@ -106,6 +109,7 @@ export default class Role extends Component{
                 title={this.state.modalTitle} 
                 visible={this.state.isModalVisible}
                 treeData={this.state.apiTreeData}
+                defaultCheckedKeys={this.state.apiTreeCheckedKeys}
                 cancel={this.modalCancel}
                 finish={(info) => this.modalFinish(info)}
                 ></RoleModal>
@@ -126,6 +130,11 @@ export default class Role extends Component{
 
 // 角色弹出框
 class RoleModal extends Component {
+
+    constructor(props){
+        super(props)
+        console.log(props, '0000000000');
+    }
 
     state = {
         apiIdList: []
@@ -201,6 +210,7 @@ class RoleModal extends Component {
                             onSelect={this.onSelect}
                             onCheck={this.onCheck}
                             treeData={this.props.treeData}
+                            defaultCheckedKeys={this.props.defaultCheckedKeys}
                         />
                     </div>
                     

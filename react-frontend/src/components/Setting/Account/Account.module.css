@@ -29,4 +29,13 @@
 
 
 
+.modal-btn {
+    display: flex;
+    justify-content: flex-end;
+}
+.modal-btn-submit {
+    margin-left: .625rem;
+}
+
+
 

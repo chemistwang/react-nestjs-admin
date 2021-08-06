@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { Button, Select, Input, Upload, Table, Modal, Form, Switch, message } from 'antd';
-import { QuestionCircleFilled, InfoCircleFilled } from '@ant-design/icons';
+import { QuestionCircleFilled, InfoCircleFilled, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import styles from './Account.module.css'
 
 import API from '../../../apis/index'
@@ -72,14 +72,16 @@ export default class Account extends Component{
             { account: 'account',name: 'name',role: 'role',department: 'department',duty: 'duty',phone: 'phone',status: true,creator: 'creator',createDate: 'createDate'},
             { account: 'account',name: 'name',role: 'role',department: 'department',duty: 'duty',phone: 'phone',status: false,creator: 'creator',createDate: 'createDate'},
         ],
+        // 编辑弹窗
+        isViewModalVisible: false,
         // 禁用启用账号弹窗
         isStatusModalVisible: false,
-        // 编辑弹窗
-        isEditModalVisible: false,
         // 重置弹窗
         isResetModalVisible: false,
         // 删除弹窗
-        isDeleteModalVisible: false
+        isDeleteModalVisible: false,
+        // 上传加载
+        uploadLoading: false,
     }
 
     importHandlerChange = (info) => {
@@ -123,6 +125,14 @@ export default class Account extends Component{
     }
 
     // 弹出框
+
+    // 新建
+    showModalAdd = () => {
+        this.setState({
+            isViewModalVisible: true
+        })
+    }
+
 
     // 编辑
     showModalEdit = () => {
@@ -177,32 +187,81 @@ export default class Account extends Component{
     }
     
 
-    // 初始化部门下拉框数据
-    initDepOption = async () => {
-        let {data} = await API.getDepartment();
-        let option = data.data.rows.map(item => {
+    // 初始化角色下拉框数据
+    initRoleOption = async () => {
+        let {data} = await API.getRole();
+        let option = data.data.list.map(item => {
             return {
                 'label': item.name,
                 'value': item.id
             }
         })
         this.setState({
-            depSelectSource: this.state.depSelectSource.concat(option)
+            roleSelectSource: this.state.roleSelectSource.concat(option)
         })
     }
 
     initDataSource = async () => {
-        let {data} = await API.getPolice();
-        this.setState({
-            dataSource: data.data.list
-        })
+        
     }
+
+
+    // 图片上传 start
+    beforeUpload = (file) => {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+            message.error('You can only upload JPG/PNG file!');
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+            message.error('Image must smaller than 2MB!');
+        }
+        return isJpgOrPng && isLt2M;
+    }
+    uploadHandleChange = (info) => {
+        if (info.file.status === 'uploading') {
+            this.setState({ loading: true });
+            return;
+        }
+        // if (info.file.status === 'done') {
+        //     // Get this url from response in real world.
+        //     getBase64(info.file.originFileObj, imageUrl =>
+        //         this.setState({
+        //         imageUrl,
+        //         loading: false,
+        //         }),
+        //     );
+        // }
+        if (info.file.status === 'done') {
+            console.log('done....')
+            console.log(info, 'info...')
+            let res = info.file.response;
+            if (res.success) {
+                message.success(res.msg);
+                this.setState({
+                    imageUrl: res.data
+                })
+            } else {
+                message.error(res.msg);
+            }
+        }
+    }
+    uploadButton = (
+        <div>
+          {this.state.uploadLoading ? <LoadingOutlined /> : <PlusOutlined />}
+          {/* <div style={{ marginTop: 8 }}>Upload</div> */}
+        </div>
+      );
+
+    // 图片上传 end
+
+
 
 
 
     // 生命周期
     componentDidMount(){
-        // this.initDepOption();
+        this.initRoleOption();
         // this.initDataSource();
     }
 
@@ -215,7 +274,7 @@ export default class Account extends Component{
                 <>
                     {/* 添加 + 编辑弹窗 */}
                     <Modal
-                    title="查看" 
+                    title="查看-编辑" 
                     visible={this.state.isViewModalVisible}
                     footer={null}
                     onCancel={this.viewHandleCancel}
@@ -224,28 +283,44 @@ export default class Account extends Component{
                         name="view"
                         labelCol={{ span: 4 }}
                         >
-                        <Form.Item label="姓名" name="name"><Input disabled/></Form.Item>
-                        <Form.Item label="警员编号" name="number"><Input disabled/></Form.Item>
-                        <Form.Item label="性别" name="gender"><Input disabled/></Form.Item>
-                        <Form.Item label="所属单位" name="department"><Input disabled/></Form.Item>
-                        <Form.Item label="职务" name="job"><Input disabled/></Form.Item>
-                        <Form.Item label="警衔" name="rank"><Input disabled/></Form.Item>
-                        <Form.Item label="出生日期" name="birth"><Input disabled/></Form.Item>
-                        <Form.Item label="籍贯" name="native"><Input disabled/></Form.Item>
-                        <Form.Item label="政治面貌" name="politics"><Input disabled/></Form.Item>
-                        <Form.Item label="学历" name="edu"><Input disabled/></Form.Item>
-                        <Form.Item label="毕业院校" name="school"><Input disabled/></Form.Item>
-                        <Form.Item label="联系方式" name="phone"><Input disabled/></Form.Item>
+                        <Form.Item label="头像" name="name">
+                        <Upload
+                            name="avatar"
+                            listType="picture-card"
+                            className="avatar-uploader"
+                            showUploadList={false}
+                            action="http://localhost:5000/upload"
+                            beforeUpload={this.beforeUpload}
+                            onChange={this.uploadHandleChange}
+                            // enctype="multipart/form-data"
+                        >
+                            {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" style={{ width: '100%' }} /> : this.uploadButton}
+                        </Upload>  
+                        </Form.Item>
+                        <Form.Item label="账号" name="number"><Input /></Form.Item>
+                        <Form.Item label="姓名" name="gender"><Input /></Form.Item>
+                        <Form.Item label="角色" name="department"><Input /></Form.Item>
+                        <Form.Item label="部门" name="edu"><Input /></Form.Item>
+                        <Form.Item label="职位" name="school"><Input /></Form.Item>
+                        <Form.Item label="手机号码" name="phone"><Input /></Form.Item>
                         </Form>
+                        <div className={styles['modal-btn']}>
+                        <Form.Item>
+                            <Button onClick={this.handleCancel}>取消</Button>
+                        </Form.Item>
+                        <Form.Item className={styles['modal-btn-submit']}>
+                            <Button type="primary" htmlType="submit">保存</Button>
+                        </Form.Item>    
+                        </div>
                     </Modal>
                     {/* 账号启用禁用弹窗 */}
                     <Modal 
-                    title="删除" 
-                    visible={this.state.isDeleteModalVisible} 
+                    title="禁用账号" 
+                    visible={this.state.isStatusModalVisible} 
                     onOk={this.deleteHandleOk} 
                     onCancel={this.deleteHandleCancel}>
-                        <p><InfoCircleFilled className={styles['danger']}/> 此操作将永久删除信息，是否继续删除？</p>
-                        <p className={styles['gray']}>确定删除后，数据永久删除且无法恢复</p>
+                        <p><InfoCircleFilled className={styles['orange']}/> 确定将此账号禁用？</p>
+                        <p className={styles['gray']}>账号禁用后，将无法登陆任何系统</p>
                     </Modal>
                     {/* 重置密码弹窗 */}
                     <Modal 
@@ -288,12 +363,16 @@ export default class Account extends Component{
                             <Button type="primary">搜索</Button>
                         </div>
                         <div className={styles['right']}>
-                            <Button type="primary" style={{marginRight: '.625rem'}}>添加</Button>
+                            <Button type="primary" style={{marginRight: '.625rem'}} onClick={this.showModalAdd}>添加账号</Button>
                         </div>
                     </div>
                     <Table rowKey="id" dataSource={this.state.dataSource} columns={this.columns} pagination={this.paginationProps}/>
             </>
         )
     }
+}
+
+
+class AccountModal extends Component {
 
 }
