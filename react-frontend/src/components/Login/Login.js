@@ -2,22 +2,26 @@ import { Component } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined, VerifiedOutlined } from '@ant-design/icons';
 
+import { withRouter } from 'react-router-dom';
+
 import styles from './Login.module.css'
 
-export default class Login extends Component {
+class Login extends Component {
     
     // constructor(props, context){
 
     // }
 
     render(){
-        const title = '智慧公安综合管理平台';
+        const title = '就普普通通的管理平台';
         const uPlaceholder = '请输入账号';
         const pPlaceholder = '请输入密码';
         const vPlaceholder = '请输入验证码';
         
         const onFinish = (values) => {
             console.log('Received values of form ---: ', values);
+            console.log(this.props, '0-=-=-===')
+            this.props.history.push('/index');
         };
         const onFinishFailed = (values) => {
             console.log('Received values of form: ', values);
@@ -30,8 +34,6 @@ export default class Login extends Component {
                     <h1 className={styles['title']}>{title}</h1>
                     <Form
                         name="basic"
-                        // labelCol={{ span: 8 }}
-                        // wrapperCol={{ span: 16 }}
                         // initialValues={{ remember: true }} 
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
@@ -41,7 +43,6 @@ export default class Login extends Component {
                             name="username"
                             rules={[{ required: true, message: '请输入账号！' }]}
                         >
-                            {/* <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" /> */}
                             <Input className={styles['login-input']} prefix={<UserOutlined/>} placeholder={uPlaceholder} />
                         </Form.Item>
 
@@ -65,23 +66,23 @@ export default class Login extends Component {
                             name="remember" 
                             valuePropName="checked"
                             // noStyle
-                            // wrapperCol={{ offset: 8, span: 16 }}
                         >
                             <Checkbox>记住密码</Checkbox>
                         </Form.Item>
 
-
                         <Form.Item
-                        //  wrapperCol={{ offset: 8, span: 16 }}
                         >
                             <Button className={styles['btn']} block type="primary" htmlType="submit">登录</Button>
                         </Form.Item>
                     </Form>
                 </div>
-            </div>
+             </div>
             
         )
     }
 
 
 }
+
+
+export default withRouter(Login)

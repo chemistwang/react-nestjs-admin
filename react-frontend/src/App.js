@@ -13,22 +13,11 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import Login from './components/Login/Login';
 import Index from './components/Index/Index';
 
+import routes from './router';
 
 function App() {
   return (
     <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <Button type="primary" size="large">Enter App</Button>
-      </header> */}
       <Router>
         <Switch>
           <Route path="/login">
@@ -39,8 +28,8 @@ function App() {
           </Route>
         </Switch>
       </Router>
+      {/* <Router routes={routes}></Router> */}
     </div>
-    
   );
 }
 
