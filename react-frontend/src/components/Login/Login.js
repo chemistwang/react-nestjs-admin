@@ -13,7 +13,7 @@ class Login extends Component {
     // }
 
     render(){
-        const title = '就普普通通的管理平台';
+        const title = 'REACT DEMO PLATFORM';
         const uPlaceholder = '请输入账号';
         const pPlaceholder = '请输入密码';
         const vPlaceholder = '请输入验证码';

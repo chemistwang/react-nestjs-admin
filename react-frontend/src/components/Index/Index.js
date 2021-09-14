@@ -9,6 +9,9 @@ import { UserOutlined } from '@ant-design/icons';
 import styles from './Index.module.css'
 
 import Sidebar from '../Sidebar/Sidebar'
+
+import Monitor from '../Monitor/Monitor'
+
 import Police from '../Police/Police'
 import Station from '../Station/Station'
 import Duty from '../Duty/Duty'
@@ -28,7 +31,7 @@ class Index extends Component {
         
                     <div className={styles['right-box']}>
                         <div className={styles['header']}>
-                            <div className={styles['title']}>智慧公安综合管理平台</div>
+                            <div className={styles['title']}>REACT DEMO PLATFORM</div>
                             <div>
                             <Avatar icon={<UserOutlined />} />
                             <Select defaultValue="管理员" bordered={false}>
@@ -40,6 +43,9 @@ class Index extends Component {
                       
                         <div className={styles['content']}>
                             <Switch>
+                                <Route path="/index">
+                                    <Monitor></Monitor>
+                                </Route>
                                 <Route path="/index/duty">
                                     <Duty></Duty>
                                 </Route>
