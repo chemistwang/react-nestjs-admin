@@ -18,6 +18,32 @@ const routes = [
         component: () => import('../page/Index.vue'),
         children: [
             {
+                path: '',
+                component: () => import('../page/Manage.vue')
+            },
+            {
+                path: 'duty',
+                component: () => import('../page/Duty.vue'),
+                children: [
+                    {
+                        path: '/',
+                        redirect: 'duty'
+                    },
+                    {
+                        path: 'duty',
+                        component: () => import('../components/duty/Duty.vue')
+                    },
+                    {
+                        path: 'org',
+                        component: () => import('../components/duty/Org.vue')
+                    },
+                    {
+                        path: 'member',
+                        component: () => import('../components/duty/Member.vue')
+                    }
+                ]
+            },
+            {
                 path: 'setting',
                 component: () => import('../page/Setting.vue'),
                 children: [
@@ -52,11 +78,17 @@ const routes = [
                 ]
             }
         ] 
+    },
+    {
+        path: '*',
+        component: () => import('../page/NotFound.vue')
     }
-    
 ]
 
-const router = new VueRouter({routes})
+const router = new VueRouter({
+    mode: 'history',
+    routes
+})
 
 export default router;
 

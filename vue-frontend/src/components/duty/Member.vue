@@ -2,23 +2,15 @@
     <div class="content">
         <div class="top">
             <div class="search">
-                <el-select class="search-select" v-model="roleSelectModel" placeholder="请选择">
-                <el-option
-                v-for="item in roleSelectOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-                </el-select>
-                <el-select class="search-select" v-model="statusSelectModel" placeholder="请选择">
+                <el-select class="search-select" v-model="depSelectModel" placeholder="请选择">
                     <el-option
-                    v-for="item in statusSelectOptions"
+                    v-for="item in depSelectOptions"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
                     </el-option>
                 </el-select>
-                <el-input class="search-input" v-model="searchKey" placeholder="请输入账号或姓名"></el-input>
+                <el-input class="search-input" v-model="searchKey" placeholder="请输入工号/姓名"></el-input>
                 <el-button type="primary">搜索</el-button>
             </div>
             <el-button class="add" type="primary" @click="showAddModal">添加</el-button>
@@ -29,33 +21,21 @@
             :border=true
             :height="460"
             >
-            <el-table-column prop="account" label="账号"></el-table-column>
             <el-table-column prop="name" label="姓名"></el-table-column>
-            <el-table-column prop="role" label="角色"></el-table-column>
+            <el-table-column prop="number" label="工号"></el-table-column>
+            <el-table-column prop="gender" label="性别"></el-table-column>
             <el-table-column prop="department" label="部门"></el-table-column>
             <el-table-column prop="duty" label="职位"></el-table-column>
             <el-table-column prop="phone" label="手机号码"></el-table-column>
-            <el-table-column prop="status" label="账号状态"  width="154">
-                <template slot-scope="scope">
-                    <el-switch
-                    v-model="scope.row.status"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949"
-                    active-text="启用"
-                    inactive-text="禁用"
-                    >
-                    </el-switch>
-                </template>
-            </el-table-column>
+            <el-table-column prop="birth" label="出生日期"></el-table-column>
             <el-table-column prop="creator" label="添加人"></el-table-column>
-            <el-table-column prop="createDate" label="添加时间" width="200"></el-table-column>
+            <el-table-column prop="createDate" label="添加时间" width="194"></el-table-column>
             <el-table-column
                 label="操作"
-                width="360"
+                width="246"
                 >
                 <template slot-scope="scope">
                     <el-button type="text">编辑</el-button>
-                    <el-button type="text">重置密码</el-button>
                     <el-button @click="handleEdit(scope.row)" type="text">删除</el-button>
                 </template>
             </el-table-column>
@@ -92,15 +72,7 @@
                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
-            </el-form-item>
-            <el-form-item 
-            label="账号" 
-            prop="account"
-            :rules="{
-                required: true, message: '账号不能为空', trigger: 'blur'
-            }"
-            >
-                <el-input v-model="dialogForm.account"></el-input>
+                支持JPG、PNG格式的图片
             </el-form-item>
             <el-form-item 
             label="姓名" 
@@ -112,15 +84,24 @@
                 <el-input v-model="dialogForm.name"></el-input>
             </el-form-item>
             <el-form-item 
-            label="角色" 
-            prop="role"
+            label="工号" 
+            prop="number"
             :rules="{
-                required: true, message: '角色不能为空', trigger: 'blur'
+                required: true, message: '工号不能为空', trigger: 'blur'
             }"
             >
-                <el-select v-model="dialogForm.role" placeholder="请选择角色">
+                <el-input v-model="dialogForm.number"></el-input>
+            </el-form-item>
+            <el-form-item 
+            label="性别" 
+            prop="role"
+            :rules="{
+                required: true, message: '性别不能为空', trigger: 'blur'
+            }"
+            >
+                <el-select v-model="dialogForm.gender" placeholder="请选择性别">
                     <el-option
-                    v-for="item in dialogRoleSelectOptions"
+                    v-for="item in dialogGenderSelectOptions"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
@@ -161,6 +142,19 @@
             >
                 <el-input v-model="dialogForm.phone"></el-input>
             </el-form-item>
+             <el-form-item 
+            label="出生日期" 
+            prop="birth"
+            :rules="{
+                required: true, message: '出生日期不能为空', trigger: 'blur'
+            }"
+            >
+                <el-date-picker
+                v-model="dialogForm.birth"
+                type="date"
+                placeholder="选择日期">
+                </el-date-picker>
+            </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
@@ -174,34 +168,31 @@
 export default {
     data(){
         return {
-            roleSelectModel: 'all',
-            roleSelectOptions: [
-                { value: 'all', label: '全部角色'},
-                { value: 'admin', label: '管理员'},
-            ],
-            statusSelectModel: 'all',
-            statusSelectOptions: [
-                { value: 'all', label: '全部账号状态'},
-                { value: 'true', label: '启用中'},
-                { value: 'false', label: '禁用中'},
+            depSelectModel: 'all',
+            depSelectOptions: [
+                { value: 'all', label: '全部部门'},
+                { value: 'dep1', label: '部门1'},
+                { value: 'dep2', label: '部门2'},
+                { value: 'dep3', label: '部门3'},
             ],
             searchKey: '',
             tableData: [
-                {account: 'chemputer', name: '赛博朋克', role: '超级管理员', department: '指挥中心', duty: '指挥中心管理员', phone: '13100000000', status: false, creator: 'admin', createDate: '2021-10-01 00:00:00'},
+                { name: '赛博朋克', number: 'A10001', gender: '男', department: '指挥中心', duty: '指挥中心管理员', phone: '13100000000', birth: '2021-10-01', creator: 'admin', createDate: '2021-10-01 00:00:00'},
             ],
             dialogTitle: '添加',
             dialogVisible: false,
             dialogForm: {
-                account: '',
                 name: '',
-                role: '',
+                number: '',
+                gender: '',
                 department: '',
                 duty: '',
-                phone: ''
+                phone: '',
+                birth: ''
             },
-            dialogRoleSelectOptions: [
-                { value: 'role1', label: '角色1'},
-                { value: 'role2', label: '角色2'},
+            dialogGenderSelectOptions: [
+                { value: 1, label: '男'},
+                { value: 0, label: '女'},
             ],
             dialogDepSelectOptions: [
                 { value: 'dep1', label: '部门1'},
@@ -224,20 +215,20 @@ export default {
                     return false;
                 }
             });
-        },
-        handleSizeChange(){
+      },
+      handleSizeChange(){
 
-        },
-        handleCurrentChange(){
+      },
+      handleCurrentChange(){
 
-        },
-        handleDelete(){
+      },
+      handleDelete(){
 
-        },
-        handleEdit(){
-            
-        },
-        handleAvatarSuccess(res, file){
+      },
+      handleEdit(){
+          
+      },
+      handleAvatarSuccess(res, file){
             this.imageUrl = URL.createObjectURL(file.raw);
         },
         beforeAvatarUpload(file) {
@@ -285,7 +276,6 @@ export default {
     margin-top: 1.25rem;
     float: right;
 }
-
 .avatar-uploader >>> .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;

@@ -14,15 +14,19 @@ export default {
         return {
             menuList: [
                 {icon: 'el-icon-coffee', text: '首页', path: '/manage'},
-                {icon: 'el-icon-ice-tea', text: '值班备勤', path: '/'},
-                {icon: 'el-icon-ice-drink', text: '仿真数据', path: '/manage/dictionary'},
+                {icon: 'el-icon-ice-tea', text: '值班备勤', path: '/manage/duty'},
+                // {icon: 'el-icon-ice-drink', text: '仿真数据', path: '/manage/dictionary'},
                 {icon: 'el-icon-milk-tea', text: '系统设置', path: '/manage/setting'}, 
             ]
         }
     },
     methods: {
         go(menu){
-            this.$router.push(menu.path)
+            console.log(this.$route.path)
+            console.log(menu.path)
+            if (this.$route.path !== menu.path) {
+                this.$router.push(menu.path);
+            }
         }
     },
 }
