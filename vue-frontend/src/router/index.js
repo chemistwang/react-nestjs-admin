@@ -22,6 +22,10 @@ const routes = [
                 component: () => import('../page/Setting.vue'),
                 children: [
                     {
+                        path: '/',
+                        redirect: 'org'
+                    },
+                    {
                         path: 'org',
                         component: () => import('../components/setting/Org.vue')
                     },

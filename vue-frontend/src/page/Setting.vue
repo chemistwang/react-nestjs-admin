@@ -28,7 +28,6 @@ export default {
     },
     computed: {
         formatMenuList: function() {
-        
             return this.menuList.map(m => {
                 return {
                     text: m.text,
@@ -47,7 +46,7 @@ export default {
 .bottom-box {
     background: #EFEFEF;
     padding: .625rem;
-    width: 100%;
+    flex: 1;
     box-sizing: border-box;
 }
 .top-box {

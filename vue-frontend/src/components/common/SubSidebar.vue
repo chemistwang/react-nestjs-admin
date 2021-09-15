@@ -1,7 +1,7 @@
 <template>
   <ul class="menus">
       <li class="menu"></li>
-      <li class="menu" v-for="(menu, index) in menuList" :key="index" @click="go(menu)">
+      <li class="menu" :class="{active:index===current}" v-for="(menu, index) in menuList" :key="index" @click="go(menu, index)">
           {{menu.text}}
       </li>
   </ul>
@@ -15,10 +15,17 @@ export default {
     props: {
         menuList: Array
     },
+    data(){
+        return {
+            current: 0
+        }
+    },
     methods: {
-        go(menu){
-            console.log(menu)
-           this.$router.push(menu.path);
+        go(menu, index){
+            this.current = index;
+            if (this.$route.path !== menu.path) {
+                this.$router.push(menu.path);
+            }
         }
     },
 }
@@ -38,5 +45,9 @@ export default {
 }
 .menu:hover {
     cursor: pointer;
+}
+.menu.active {
+    background: #F5F7FD;
+    color: #516DE3;
 }
 </style>
